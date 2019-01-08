@@ -1,39 +1,7 @@
-{
-  type: 'ADD_TODO',
-  todo: {
-    id: 0,
-    name: 'Learn Redux',
-    complete: false
-  }
-}
-
-{
-  type: 'REMOVE_TODO',
-  id: 0
-}
-
-{
-  type: 'TOGGLE_TODO',
-  id: 0
-}
-
-{
-  type: 'ADD_GOAL',
-  goal: {
-    id: 0,
-    name: 'Run a marathon',
-  }
-}
-
-{
-  type: 'REMOVE_GOAL',
-  id: 0
-}
-
 // Reducer function
 function todos(state = [], action) {
-  switch (action.type) {
-    case 'ADD-TODO':
+  switch(action.type) {
+    case 'ADD_TODO':
       return state.concat([action.todo])
     case 'REMOVE_TODO':
       return state.filter((todo) => todo.id !== action.id)
@@ -43,6 +11,24 @@ function todos(state = [], action) {
       )
     default:
       return state
+  }
+}
+
+function goals(state = [], action) {
+  switch(action.type) {
+    case 'ADD_GOAL':
+      return state.concat([action.goal])
+    case 'REMOVE_GOAL':
+      return state.filter((goal) => goal.id !== action.id)
+    default:
+      return state
+  }
+}
+
+function app(state = {}, action) {
+  return {
+    todos: todos(state.todos, action),
+    goals: goals(state.goals, action)
   }
 }
 
@@ -77,12 +63,65 @@ function createStore(reducer) {
   }
 }
 
-const store = createStore(todos)
+const store = createStore(app)
+store.subscribe(() => {
+  console.log('The new state is: ', store.getState())
+})
+
 store.dispatch({
   type: 'ADD_TODO',
   todo: {
     id: 0,
-    name: 'Learn Redux',
-    complete: false
+    name: 'Walk the dog',
+    complete: false,
   }
+})
+
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: {
+    id: 1,
+    name: 'Wash the car',
+    complete: false,
+  }
+})
+
+store.dispatch({
+  type: 'ADD_TODO',
+  todo: {
+    id: 2,
+    name: 'Go to the gym',
+    complete: true,
+  }
+})
+
+store.dispatch({
+  type: 'REMOVE_TODO',
+  id: 1
+})
+
+store.dispatch({
+  type: 'TOGGLE_TODO',
+  id: 0
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 0,
+    name: 'Learn Redux'
+  }
+})
+
+store.dispatch({
+  type: 'ADD_GOAL',
+  goal: {
+    id: 1,
+    name: 'Lose 20 pounds'
+  }
+})
+
+store.dispatch({
+  type: 'REMOVE_GOAL',
+  id: 0
 })
